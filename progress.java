@@ -12,6 +12,10 @@ public class progress extends Canvas {
         frame.pack();
         frame.setVisible(true);    
     }
+
+    public void paint(Graphics g) {
+        g.drawRect(50, 50, 100, 100);
+    }
 }
 
 
