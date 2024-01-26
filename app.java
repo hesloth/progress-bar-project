@@ -5,8 +5,11 @@ import java.util.ArrayList;
 
 public class App extends JFrame implements MouseListener {
 
-    int huh = 5;
+    int numBoxes = 5;
     ArrayList<JLabel> boxes = new ArrayList<>();
+    ArrayList<JLabel> progressSegments = new ArrayList<>();
+    JLabel progressBar;
+    int greenBoxCount = 0;
 
     App() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -14,7 +17,7 @@ public class App extends JFrame implements MouseListener {
         this.setLayout(null);
 
         checkBoxes();
-        progressBar();
+        createProgressBar();
 
         for (JLabel box : boxes) {
             this.add(box);
@@ -23,17 +26,28 @@ public class App extends JFrame implements MouseListener {
         this.setVisible(true);
     }
 
-    public void progressBar() {
+    public void createProgressBar() {
         JLabel progress = new JLabel();
         progress.setBounds(100, 50, 600, 50);
         progress.setOpaque(true);
         progress.setBackground(Color.red);
         boxes.add(progress);
+
+        int totalWidth = 600;
+        int segmentWidth = totalWidth / numBoxes;
+        for (int i = 0; i < numBoxes; i++) {
+            JLabel segment = new JLabel();
+            segment.setBounds(100 + i * segmentWidth, 50, segmentWidth, 50);
+            segment.setOpaque(true);
+            segment.setBackground(new Color(0, 0, 0, 0));
+            this.add(segment);
+            progressSegments.add(segment);      
+        }
     }
  
     public void checkBoxes() {
         int distance = 120;
-        for (int i = 0; i < huh; i++) {
+        for (int i = 0; i < numBoxes; i++) {
             JLabel label = new JLabel();
             label.setBounds(150, distance, 50, 50);
             label.setOpaque(true);
@@ -51,6 +65,18 @@ public class App extends JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        Object source = e.getSource();
+        if (source instanceof JLabel && boxes.contains(source)) {
+            JLabel clickedLabel = (JLabel) source;
+            int index = boxes.indexOf(clickedLabel);
+            if (clickedLabel.getBackground().equals(Color.red)) {
+                clickedLabel.setBackground(Color.green);
+                progressSegments.get(index).setBackground(Color.green);
+            } else {
+                clickedLabel.setBackground(Color.red);
+                progressSegments.get(index).setBackground(new Color(0, 0, 0, 0));
+            }
+        }
     }
 
     @Override
