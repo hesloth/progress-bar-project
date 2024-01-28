@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class App extends JFrame implements MouseListener {
 
@@ -9,7 +10,7 @@ public class App extends JFrame implements MouseListener {
     ArrayList<JLabel> boxes = new ArrayList<>();
     ArrayList<JLabel> progressSegments = new ArrayList<>();
     JLabel progressBar;
-    int greenBoxCount = 0;
+    List<Integer> checkedSegments = new ArrayList<>();
 
     App() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,7 +64,27 @@ public class App extends JFrame implements MouseListener {
         new App();
     }
 
-    @Override
+    // @Override
+    // public void mouseClicked(MouseEvent e) {
+    //     Object source = e.getSource();
+    //     if (source instanceof JLabel && boxes.contains(source)) {
+    //         JLabel clickedLabel = (JLabel) source;
+    //         int index = boxes.indexOf(clickedLabel);
+    //         if (clickedLabel.getBackground().equals(Color.red)) {
+    //             clickedLabel.setBackground(Color.green);
+    //             progressSegments.get(index).setBackground(Color.green);
+    //             checkedSegments.add(index);
+    //         } else {
+    //             clickedLabel.setBackground(Color.red);
+    //             int lastIndex = checkedSegments.lastIndexOf(index);
+    //             if (lastIndex != -1) {
+    //                 checkedSegments.remove(lastIndex);
+    //                 progressSegments.get(lastIndex).setBackground(new Color(0, 0, 0, 0));
+    //             }
+    //         }
+    //     }
+    // }
+
     public void mouseClicked(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof JLabel && boxes.contains(source)) {
@@ -71,10 +92,25 @@ public class App extends JFrame implements MouseListener {
             int index = boxes.indexOf(clickedLabel);
             if (clickedLabel.getBackground().equals(Color.red)) {
                 clickedLabel.setBackground(Color.green);
+                checkedSegments.add(index);
                 progressSegments.get(index).setBackground(Color.green);
             } else {
                 clickedLabel.setBackground(Color.red);
-                progressSegments.get(index).setBackground(new Color(0, 0, 0, 0));
+                int lastIndex = checkedSegments.lastIndexOf(index);
+                if (lastIndex != -1) {
+                    checkedSegments.remove(lastIndex);
+                }
+                updateProgressBar();
+            }
+        }
+    }
+
+    private void updateProgressBar() {
+        for (int i = 0; i < numBoxes; i++) {
+            if (checkedSegments.contains(i)) {
+                progressSegments.get(i).setBackground(Color.green);
+            } else {
+                progressSegments.get(i).setBackground(new Color(0, 0, 0, 0));
             }
         }
     }
